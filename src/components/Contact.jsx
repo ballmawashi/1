@@ -39,8 +39,8 @@ const Contact = () => {
         // Web3Forms API endpoint
         const endpoint = 'https://api.web3forms.com/submit';
 
-        // ⚠️ 重要: 下記のアクセスキーを https://web3forms.com で取得したキーに差し替えてください
-        const accessKey = 'ca516c61-871e-4bee-86fc-a53e9f20a419';
+        // 環境変数からアクセスキーを取得
+        const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
 
         const payload = {
             access_key: accessKey,

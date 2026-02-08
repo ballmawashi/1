@@ -169,7 +169,7 @@ const PerformerRequest = () => {
 
             // Web3Forms API を使用（無料）
             const data = {
-                access_key: 'ca516c61-871e-4bee-86fc-a53e9f20a419',
+                access_key: import.meta.env.VITE_WEB3FORMS_KEY,
                 subject: `【演者登録リクエスト】${formData.performerName}`,
                 from_name: formData.performerName,
                 email: formData.email,
