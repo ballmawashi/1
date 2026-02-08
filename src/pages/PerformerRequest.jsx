@@ -168,12 +168,25 @@ const PerformerRequest = () => {
 }`;
 
             // Web3Forms API を使用（無料）
-            const data = {
-                access_key: import.meta.env.VITE_WEB3FORMS_KEY,
-                subject: `【演者登録リクエスト】${formData.performerName}`,
-                from_name: formData.performerName,
-                email: formData.email,
-                message: `
+            // ファイルアップロードのため FormData を使用
+            const formDataToSend = new FormData();
+
+            // 基本フィールド
+            formDataToSend.append("access_key", import.meta.env.VITE_WEB3FORMS_KEY);
+            formDataToSend.append("subject", `【演者登録リクエスト】${formData.performerName}`);
+            formDataToSend.append("from_name", formData.performerName);
+            formDataToSend.append("email", formData.email);
+
+            // スパム対策（Honeypot）: このフィールドが入力されたらスパムと判定
+            formDataToSend.append("botcheck", "");
+
+            // ファイル添付
+            if (formData.photo) {
+                formDataToSend.append("attachment", formData.photo);
+            }
+
+            // メッセージ本文の構築
+            const messageBody = `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 　　　　演者登録リクエスト
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -202,16 +215,14 @@ ${performerJson}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${formData.email} 宛にメールで理由をお知らせください。
-                `
-            };
+            `;
+
+            formDataToSend.append("message", messageBody);
 
             const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(data)
+                // FormDataの場合、Content-Typeヘッダーは自動設定されるため指定しない
+                body: formDataToSend
             });
 
             const result = await response.json();

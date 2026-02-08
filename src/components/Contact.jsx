@@ -50,6 +50,7 @@ const Contact = () => {
             email: formData.email,
             inquiry_type: t.contact.types[formData.type],
             message: formData.details,
+            botcheck: "" // スパム対策（Honeypot）
         };
 
         try {
