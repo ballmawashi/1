@@ -2,10 +2,13 @@
 
 :root {
   /* Colors */
-  --color-bg-main: #0a0e17; /* Deep ocean night */
+  --color-bg-main: #0a0e17;
+  /* Deep ocean night */
   --color-bg-secondary: #151a25;
-  --color-accent-gold: #cfb165; /* Luxury gold */
-  --color-accent-red: #b32d2d; /* Ryukyu red */
+  --color-accent-gold: #cfb165;
+  /* Luxury gold */
+  --color-accent-red: #b32d2d;
+  /* Ryukyu red */
   --color-text-main: #f0f0f0;
   --color-text-muted: #a0a0a0;
   --color-glass: rgba(255, 255, 255, 0.05);
@@ -44,12 +47,19 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading-jp);
   line-height: 1.2;
 }
 
-h1.en, h2.en, h3.en {
+h1.en,
+h2.en,
+h3.en {
   font-family: var(--font-heading-en);
 }
 
@@ -77,8 +87,13 @@ button {
   padding: var(--spacing-xl) 0;
 }
 
-.text-gold { color: var(--color-accent-gold); }
-.text-red { color: var(--color-accent-red); }
+.text-gold {
+  color: var(--color-accent-gold);
+}
+
+.text-red {
+  color: var(--color-accent-red);
+}
 
 .flex-center {
   display: flex;
@@ -128,8 +143,15 @@ button {
 
 /* Animation Utilities */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
