@@ -16,7 +16,6 @@ const PerformerRequest = () => {
         youtubeUrl: '',
         photo: null
     });
-    const [photoPreview, setPhotoPreview] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState(null);
     const [charCount, setCharCount] = useState(0);
@@ -43,9 +42,9 @@ const PerformerRequest = () => {
                 'Music': '音楽',
                 'Modern': 'モダン'
             },
-            photo: 'プロフィール写真',
-            photoDescription: 'JPG, PNG形式 (最大5MB)',
-            photoButton: '写真を選択',
+            photo: 'プロフィール写真（後ほどメールで送付）',
+            photoDescription: 'フォーム送信後、返信メールに写真を添付してご提出ください。',
+            photoButton: '写真を選択', // 未使用になりますが定義は残します
             profile: 'プロフィール・自己紹介',
             profilePlaceholder: 'あなたの活動内容、経歴、アピールポイントなどをご記入ください。',
             charCount: '文字',
@@ -63,7 +62,7 @@ const PerformerRequest = () => {
             submit: '登録リクエストを送信',
             submitting: '送信中...',
             successTitle: '送信完了',
-            successMessage: 'リクエストを受け付けました。管理者が確認後、メールにてご連絡いたします。',
+            successMessage: 'リクエストを受け付けました。自動返信メールが届きますので、そちらにプロフィール写真を添付してご返信ください。',
             errorTitle: 'エラー',
             errorMessage: '送信に失敗しました。時間をおいて再度お試しください。',
             required: '必須',
@@ -88,8 +87,8 @@ const PerformerRequest = () => {
                 'Music': 'Music',
                 'Modern': 'Modern'
             },
-            photo: 'Profile Photo',
-            photoDescription: 'JPG, PNG format (max 5MB)',
+            photo: 'Profile Photo (Send later via email)',
+            photoDescription: 'After submitting, please reply to the confirmation email with your photos.',
             photoButton: 'Choose Photo',
             profile: 'Profile / Self Introduction',
             profilePlaceholder: 'Please describe your activities, background, and appeal points.',
@@ -108,7 +107,7 @@ const PerformerRequest = () => {
             submit: 'Submit Request',
             submitting: 'Submitting...',
             successTitle: 'Submitted',
-            successMessage: 'Your request has been received. We will contact you via email after admin review.',
+            successMessage: 'Your request has been received. Please reply to the confirmation email with your profile photos.',
             errorTitle: 'Error',
             errorMessage: 'Submission failed. Please try again later.',
             required: 'Required',
@@ -124,22 +123,6 @@ const PerformerRequest = () => {
 
         if (name === 'profile') {
             setCharCount(value.length);
-        }
-    };
-
-    const handlePhotoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                alert(language === 'ja' ? 'ファイルサイズは5MB以下にしてください' : 'File size must be under 5MB');
-                return;
-            }
-            setFormData(prev => ({ ...prev, photo: file }));
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPhotoPreview(reader.result);
-            };
-            reader.readAsDataURL(file);
         }
     };
 
@@ -168,25 +151,13 @@ const PerformerRequest = () => {
 }`;
 
             // Web3Forms API を使用（無料）
-            // ファイルアップロードのため FormData を使用
-            const formDataToSend = new FormData();
-
-            // 基本フィールド
-            formDataToSend.append("access_key", import.meta.env.VITE_WEB3FORMS_KEY);
-            formDataToSend.append("subject", `【演者登録リクエスト】${formData.performerName}`);
-            formDataToSend.append("from_name", formData.performerName);
-            formDataToSend.append("email", formData.email);
-
-            // スパム対策（Honeypot）: このフィールドが入力されたらスパムと判定
-            formDataToSend.append("botcheck", "");
-
-            // ファイル添付
-            if (formData.photo) {
-                formDataToSend.append("attachment", formData.photo);
-            }
-
-            // メッセージ本文の構築
-            const messageBody = `
+            const data = {
+                access_key: import.meta.env.VITE_WEB3FORMS_KEY,
+                subject: `【演者登録リクエスト】${formData.performerName}`,
+                from_name: formData.performerName,
+                email: formData.email,
+                botcheck: "", // スパム対策（Honeypot）
+                message: `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 　　　　演者登録リクエスト
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -201,7 +172,6 @@ const PerformerRequest = () => {
 
 ■ プロフィール:
 ${formData.profile}
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 　　　承認する場合
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -211,18 +181,25 @@ ${formData.profile}
 ${performerJson}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+　　　写真の提出について
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+※このメールへの返信で、プロフィール写真を添付してもらうよう依頼してください。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 　　　拒否する場合
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${formData.email} 宛にメールで理由をお知らせください。
-            `;
-
-            formDataToSend.append("message", messageBody);
+            `
+            };
 
             const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                // FormDataの場合、Content-Typeヘッダーは自動設定されるため指定しない
-                body: formDataToSend
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
             });
 
             const result = await response.json();
@@ -242,7 +219,6 @@ ${formData.email} 宛にメールで理由をお知らせください。
                     youtubeUrl: '',
                     photo: null
                 });
-                setPhotoPreview(null);
                 setCharCount(0);
             } else {
                 console.error('Web3Forms error:', result);
@@ -361,37 +337,13 @@ ${formData.email} 宛にメールで理由をお知らせください。
 
                         <div className="form-section">
                             <h3>{t.photo}</h3>
-                            <p className="section-description">{t.photoDescription}</p>
-
-                            <div className="photo-upload-area">
-                                {photoPreview ? (
-                                    <div className="photo-preview">
-                                        <img src={photoPreview} alt="Preview" />
-                                        <button
-                                            type="button"
-                                            className="remove-photo"
-                                            onClick={() => {
-                                                setPhotoPreview(null);
-                                                setFormData(prev => ({ ...prev, photo: null }));
-                                            }}
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <label className="photo-upload-label">
-                                        <input
-                                            type="file"
-                                            accept="image/jpeg,image/png"
-                                            onChange={handlePhotoChange}
-                                            hidden
-                                        />
-                                        <div className="upload-placeholder">
-                                            <span className="upload-icon">📷</span>
-                                            <span>{t.photoButton}</span>
-                                        </div>
-                                    </label>
-                                )}
+                            <div className="section-description" style={{
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px dashed var(--color-text-muted)'
+                            }}>
+                                <p>⚠️ {t.photoDescription}</p>
                             </div>
                         </div>
 
