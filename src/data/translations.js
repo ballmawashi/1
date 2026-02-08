@@ -5,6 +5,7 @@ export const translations = {
             genres: "ジャンル",
             performers: "キャスト",
             contact: "お問い合わせ",
+            register: "演者登録",
             logoSub: "琉球MICEアトラクション"
         },
         hero: {
@@ -57,6 +58,7 @@ export const translations = {
             genres: "Genres",
             performers: "Cast",
             contact: "Contact",
+            register: "Register",
             logoSub: "Ryukyu MICE Attraction"
         },
         hero: {
@@ -109,6 +111,7 @@ export const translations = {
             genres: "類型",
             performers: "演藝人員",
             contact: "聯繫我們",
+            register: "演者登錄",
             logoSub: "琉球MICE娛樂"
         },
         hero: {

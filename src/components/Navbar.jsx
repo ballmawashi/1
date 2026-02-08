@@ -17,7 +17,8 @@ const Navbar = () => {
     { key: 'home', href: '/' },
     { key: 'genres', href: '/#genres' },
     { key: 'performers', href: '/#performers' },
-    { key: 'contact', href: '/#contact' }
+    { key: 'contact', href: '/#contact' },
+    { key: 'register', href: '/performer-request' }
   ];
 
   return (

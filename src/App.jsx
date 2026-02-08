@@ -7,6 +7,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import GenreDetail from './pages/GenreDetail';
 import PerformerDetail from './pages/PerformerDetail';
+import PerformerRequest from './pages/PerformerRequest';
 import ScrollToAnchor from './components/ScrollToAnchor';
 import './App.css';
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/genre/:genreId" element={<GenreDetail />} />
           <Route path="/performer/:id" element={<PerformerDetail />} />
+          <Route path="/performer-request" element={<PerformerRequest />} />
         </Routes>
         <Footer />
       </div>
