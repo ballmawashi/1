@@ -10,8 +10,8 @@ export const translations = {
         },
         hero: {
             sub: "Okinawa MICE Attraction",
-            title: "琉球の夜を彩る\n至高のエンターテイメント",
-            desc: "MICE、インバウンドイベントに特化した\n沖縄の伝統と革新が融合するステージショーを提供します",
+            title: "琉球の夜を彩る\n至高の\nエンターテイメント",
+            desc: "厳選された沖縄最高峰のエンタメを\nMICE、インバウンドイベントに特化した\n沖縄の伝統と革新が融合するステージショーを提供します",
             cta: "キャストを探す"
         },
         search: {
